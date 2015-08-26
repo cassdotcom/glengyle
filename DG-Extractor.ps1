@@ -1,6 +1,16 @@
 # DG-Extractor.ps1
 # This file will extract governor data when given a model path.
 
+$msgTable = Data {
+    ConvertFrom-StringData @'
+NoDGsPulled = No DGs found. Script will now exit.
+DGCallError = Error in DG call. Script will now exit.
+DataConstructionError = Error in node data construction. Script will now exit.
+starting = Begin script
+ending = Script complete
+'@
+}
+
 function DG-Extractor {
  <#
     .Synopsis
@@ -62,6 +72,7 @@ function DG-Extractor {
         $model
     )
 
+    Write-Verbose $msgTable.starting
 
     Try {
 
@@ -79,12 +90,12 @@ function DG-Extractor {
         $DGCount = $DGNodes.Count
         Write-Verbose "$($DGCount) DGs found"
 
-        if ( $DGCount = 0 ) { Write-Warning "No DGs found. Script will now exit."; return }
+        if ( $DGCount = 0 ) { Write-Warning $msgTable.NoDGsPulled; return }
 
     } Catch {
 
         $thisError = $_
-        Write-Error "$($thisError)`nError in DG call. Script will now exit."
+        Write-Error "$($thisError)`n$($msgTable.DGCallError)"
         return
 
     }
@@ -115,11 +126,12 @@ function DG-Extractor {
     } Catch {
 
         $thisError = $_
-        Write-Error "$($thisError)`nError in node data construction. Script will now exit."
+        Write-Error "$($thisError)`n$($msgTable.DataConstructionError)"
         return
 
     }
 
+    Write-Verbose $msgTable.ending
     $modelDGs
 
 }
