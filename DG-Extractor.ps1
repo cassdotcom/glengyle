@@ -66,14 +66,14 @@ function DG-Extractor {
     Try {
 
         # pull nodes from db
-        $qry = "SELECT GasNodeControl.NodeId
+        $query = "SELECT GasNodeControl.NodeId
                 FROM GasNodeControl
                 WHERE GasNodeControl.IsKnownPressure"
 
-        Write-Verbose "Use query: $($qry)"
+        Write-Verbose "Use query: $($query)"
 
         # Call db
-        $DGNodes = Query-DataBase -database $model -qry $qry
+        $DGNodes = Query-DataBase -database $model -query $query
 
         # Test for null return
         $DGCount = $DGNodes.Count
@@ -100,10 +100,10 @@ function DG-Extractor {
             $DG = @{'NodeID'=$n.NodeId}
 
             # Flow data
-            $DG.Add('Flow',(Query-DataBase -database $model -qry "SELECT Flow FROM GasNodeDemand WHERE NodeId=$($n.NodeId)").Flow)
-            $DG.Add('Description',(Query-DataBase -database $model -qry "SELECT Description FROM NodeDescriptions WHERE NodeId=$($n.NodeId)").Description)
-            $DG.Add('Pressure',(Query-DataBase -database $model -qry "SELECT Pressure FROM GasNode WHERE NodeId=$($n.NodeId)").Pressure)
-            $DG.Add('NodeNumber',(Query-DataBase -database $model -qry "SELECT StringVal FROM NodeNameIdMap WHERE IdVal=$($n.NodeId)").StringVal)
+            $DG.Add('Flow',(Query-DataBase -database $model -query "SELECT Flow FROM GasNodeDemand WHERE NodeId=$($n.NodeId)").Flow)
+            $DG.Add('Description',(Query-DataBase -database $model -query "SELECT Description FROM NodeDescriptions WHERE NodeId=$($n.NodeId)").Description)
+            $DG.Add('Pressure',(Query-DataBase -database $model -query "SELECT Pressure FROM GasNode WHERE NodeId=$($n.NodeId)").Pressure)
+            $DG.Add('NodeNumber',(Query-DataBase -database $model -query "SELECT StringVal FROM NodeNameIdMap WHERE IdVal=$($n.NodeId)").StringVal)
 
             $modelDG = New-Object -TypeName PSObject -Property $DG
 
