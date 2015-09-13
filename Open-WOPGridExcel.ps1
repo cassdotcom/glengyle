@@ -6,12 +6,12 @@ function Open-WOPGridExcel {
         [ValidateScript({(Test-Path $_)})]
         [Parameter(ValueFromPipeline=$True,Mandatory=$True)]
         [System.String]$FilePath,
-        [Parameter(Mandatory = $false)
-        [System.String]$tranOut        
+        [Parameter(Mandatory = $false)]
+        [System.String]$fileOut        
     )
     
     # create excel s/s
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tCreate excel s/s" | Tee-Object $tranOut
+	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tCreate excel s/s" | Tee-Object $fileOut
 	$xl = New-Object -ComObject Excel.Application
 	# hide
 	$xl.Visible = $false
@@ -19,7 +19,7 @@ function Open-WOPGridExcel {
 	$xl.DisplayAlerts = $false
     
     # open workbook
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tOpen workbook" | Tee-Object $tranOut
+	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tOpen workbook" | Tee-Object $fileOut
 	$wb = $xl.Workbooks.Open($filepath)
 	$ws = $wb.Worksheets.Item(1)
 	$ws.Activate()
@@ -28,15 +28,15 @@ function Open-WOPGridExcel {
 	$lastRow = $ws.UsedRange.Rows.Count
 	$lastCol = $ws.UsedRange.Columns.Count
 	
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($lastRow) Rows" | Tee-Object $tranOut
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($lastCol) Columns" | Tee-Object $tranOut
+	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($lastRow) Rows" | Tee-Object $fileOut
+	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($lastCol) Columns" | Tee-Object $fileOut
     
     # ignore headers
 	$thisRow = 3
 
 	# number of DGs
 	$govcount = $lastRow - $thisRow
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($govcount) DGs in grid" | Tee-Object $tranOut
+	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($govcount) DGs in grid" | Tee-Object $fileOut
 
 	# counter
 	$dg_dataArr = @()
@@ -46,7 +46,7 @@ function Open-WOPGridExcel {
 
 		$dg_data = @{}
 		
-		"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tRow $($k)" | Tee-Object $tranOut
+		"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tRow $($k)" | Tee-Object $fileOut
 
 		$dg_data.add('WOP_EquipmentID',$ws.Cells.Item($k,1).value())
 		$dg_data.add('WOP_GridNumber',$ws.Cells.Item($k,2).value())
@@ -70,13 +70,15 @@ function Open-WOPGridExcel {
 	}
 
     $newXML = (Split-Path $filepath -Leaf).replace(".xlsx","") + ".xml"
-    $outFile = Join-Path -Path "S:\TEST AREA\ac00418\OpsPlan\data" -ChildPath $newXML
+    $outFile = Join-Path -Path "S:\TEST AREA\ac00418\OpsPlan\data\SC_DG_OBJECTS" -ChildPath $newXML
     
     $dg_dataArr | Export-Clixml $outFile -NoClobber
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tExported to xml [$($outFile)]" | Tee-Object $tranOut
+	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tExported to xml [$($outFile)]" | Tee-Object $fileOut
 
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tStopping Excel" | Tee-Object $tranOut
+	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tStopping Excel" | Tee-Object $fileOut
     $wb.Close()
     $xl.Quit()
+	#$aa = Get-Process -Name "excel"
+	#Stop-Process $aa
     
 }
