@@ -1,37 +1,34 @@
 function Call-WOPGrids {
-
-    try{
-      stop-transcript|out-null
-    }
-    catch [System.InvalidOperationException]{}
     
     $timeNow = Get-Date -UFormat "%Y_%m_%d"
     $tranOut = Join-Path -Path "S:\TEST AREA\ac00418\OpsPlan\log" -ChildPath ($timeNow + "__Call_WOPGridExcel.txt")
-        
-    Start-Transcript -Path $tranOut -Append
-    Write-Host "`n`n`n`n======================================================"
-    Write-Host "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S') CALL-WOPGRIDS.ps1"
-    Write-Host "======================================================"
+
+    $msg = @"
+======================================================
+$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S') CALL-WOPGRIDS.ps1
+======================================================
+"@ | Tee-Object $tranOut
 
     $SC_grids = gci "V:\T-ASSET\PLANNING\SCOTLAND AND SOUTH VALIDATION\OPS PLAN\OPS PLAN DATA, MODEL RUNS etc\OPS PLAN 2015-16\SCOTLAND\LP MODEL RUNS\"
     
-    Write-Host "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($SC_grids.count) Grid Files detected."
+    "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($SC_grids.count) Grid Files detected." | Tee-Object $tranOut
     
     foreach ( $n in $SC_grids ) {
     
-        Write-Host "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t"
-        Write-Host "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t------------------------------------------------------"
-        Write-Host "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t"
-        Write-Host "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($n.basename)"
+        "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t" | Tee-Object $tranOut
+        "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t------------------------------------------------------" | Tee-Object $tranOut
+        "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t" | Tee-Object $tranOut
+        "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($n.basename)" | Tee-Object $tranOut
         
-        Open-WOPGridExcel -FilePath $n.fullname -Verbose
+        Open-WOPGridExcel -FilePath $n.fullname -fileOut $tranOut
         
-        Write-Host "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tFinished
+        "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tFinished" | Tee-Object $tranOut
         
     }
     
-    Stop-Transcript
     
 }
         
+        
+    
         
