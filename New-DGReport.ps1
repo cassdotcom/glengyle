@@ -7,7 +7,7 @@ ConvertFrom-StringData @'
 
 function New-DGReport {
 
-    $WOPFYRuns = gci $dataTable.FY1Runs_Out -filter "*R1.csv" | select -ExpandProperty FullName
+    $WOPFYRuns = gci $dataTable.FY1Runs_Out -filter "*R2.csv" | select -ExpandProperty FullName
     
     
     $dgColl = @()
@@ -43,9 +43,6 @@ function New-DGReport {
         $i++
     }
     
-    $dgColl | Export-Csv ("$($dataTable.Export_DGs)\FY1_R1_DGs.csv") -NoTypeInformation
+    $dgColl | Export-Csv ("$($dataTable.Export_DGs)\FY1_R2_DGs.csv") -NoTypeInformation
     
 }
-
-            
-                
