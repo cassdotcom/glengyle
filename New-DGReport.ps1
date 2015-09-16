@@ -1,5 +1,3 @@
-
-
 $dataTable = Data {
 ConvertFrom-StringData @'
     FY1Runs_Out=S:\\WOP 15-16\\FY1 Runs - Outputs
@@ -9,101 +7,45 @@ ConvertFrom-StringData @'
 
 function New-DGReport {
 
-    $WOPFY1Runs = gci $dataTable.FY1Runs_Out -filter "*R1.csv" | select -ExpandProperty FullName
+    $WOPFYRuns = gci $dataTable.FY1Runs_Out -filter "*R1.csv" | select -ExpandProperty FullName
     
     
     $dgColl = @()
-    $WOPCount = $WOPFY1Runs.count
+    $WOPCount = $WOPFYRuns.count
     $i=1
-        
-    foreach ( $csvFile in $WOPFY1Runs ) {
+
+
+    foreach ( $csvFile in $WOPFYRuns ) {
     
         if ( $csvFile -match '\d{6}' ) { $lpmodel = $Matches[0] }
-        $dgs = import-csv -Path (Join-Path -Path $dataTable.FY1Runs_Out -ChildPath ("$($lpmodel)_FY1_R1.csv")) | where { $_.NodeStatus -match "Known Pressure" }
-       
-        Write-Progress -Activity "Collect DGs from exports" -Status "$($lpmodel)" -Id 0 -PercentComplete ($i/$WOPCount * 100)
+        $dgs = Import-Csv -Path $csvFile | where { $_.NodeStatus -match "Known Pressure" }
+        foreach ( $k in $dgs ) {
         
-        foreach ( $dg in $dgs ) {
-        
-            $dg | Add-Member -MemberType NoteProperty -Name Run -Value "R1"
-            $dg | Add-Member -MemberType NoteProperty -Name Year -Value "FY1"
+            $dgHT = @{
+                SYN_LPNodeNumber=$k.NAME
+                SYN_Flow=$k.NodeResultFlow
+                SYN_Pressure=$k.NodeResultPressure
+                SYN_ActiveState=$k.NodeActiveState
+                SYN_Description=$k.NodeDescription
+                SYN_MinPressure=$k.NodeMinimumPressure
+                SYN_Subsystem=$k.NodeSubsystemID
+                SYN_Symbol=$k.NodeSymbolName
+                SYN_X=$k.NodeXCoordinate
+                SYN_Y=$k.NodeYCoordinate
+            }
             
-            $dgColl += $dg
+            $dgObj = New-Object PSObject -Property $dgHT
             
-        }
-        
-        
-        $dgs = import-csv -Path (Join-Path -Path $dataTable.FY1Runs_Out -ChildPath ("$($lpmodel)_FY1_R2.csv")) | where { $_.NodeStatus -match "Known Pressure" }
-        
-        foreach ( $dg in $dgs ) {
-        
-            $dg | Add-Member -MemberType NoteProperty -Name Run -Value "R2"
-            $dg | Add-Member -MemberType NoteProperty -Name Year -Value "FY1"
-            
-            $dgColl += $dg
+            $dgColl += $dgObj
             
         }
-        
+        Write-Progress -Activity "Collect DGs" -Status "$($lpmodel)" -Id 0 -PercentComplete ($i/$WOPCount * 100)
         $i++
-        
     }
     
-    <#
-        F Y 5
-                #>
-                
-    
-    $i=1
-    
-    $WOPFY5Runs = gci $dataTable.FY5Runs_Out -filter "*.csv" | select -ExpandProperty FullName
-    
-    $wopCount = $WOPFY5Runs.count
-    
-    foreach ( $csvFile in $WOPFY5Runs ) {
-    
-        if ( $csvFile -match '\d{6}' ) { $lpmodel = $Matches[0] }
-        $dgs = import-csv -Path (Join-Path -Path $dataTable.FY5Runs_Out -ChildPath ("$($lpmodel)_FY5_R1.csv")) | where { $_.NodeStatus -match "Known Pressure" }
-   
-        Write-Progress -Activity "Collect DGs from exports" -Status "$($lpmodel)" -Id 0 -PercentComplete ($i/$wopCount * 100)
-        
-        foreach ( $dg in $dgs ) {
-        
-            $dg | Add-Member -MemberType NoteProperty -Name Run -Value "R1"
-            $dg | Add-Member -MemberType NoteProperty -Name Year -Value "FY5"
-            
-            $dgColl += $dg
-            
-        }
-        
-        
-        $dgs = import-csv -Path (Join-Path -Path $dataTable.FY5Runs_Out -ChildPath ("$($lpmodel)_FY5_R2.csv")) | where { $_.NodeStatus -match "Known Pressure" }
-        
-        foreach ( $dg in $dgs ) {
-        
-            $dg | Add-Member -MemberType NoteProperty -Name Run -Value "R2"
-            $dg | Add-Member -MemberType NoteProperty -Name Year -Value "FY5"
-            
-            $dgColl += $dg
-            
-        }
-        
-        
-        $dgs = import-csv -Path (Join-Path -Path $dataTable.FY5Runs_Out -ChildPath ("$($lpmodel)_FY5_R3.csv")) | where { $_.NodeStatus -match "Known Pressure" }
-        
-        foreach ( $dg in $dgs ) {
-        
-            $dg | Add-Member -MemberType NoteProperty -Name Run -Value "R3"
-            $dg | Add-Member -MemberType NoteProperty -Name Year -Value "FY5"
-            
-            $dgColl += $dg
-            
-        }
-        $i++
-        
-    }
-    
-    
-    $dgColl | Export-CSV (Join-Path -Path $dataTable.Export_DGs -ChildPath ("DGs.csv"))
+    $dgColl | Export-Csv ("$($dataTable.Export_DGs)\FY1_R1_DGs.csv") -NoTypeInformation
     
 }
-        
+
+            
+                
