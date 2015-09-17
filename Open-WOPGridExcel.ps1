@@ -1,3 +1,10 @@
+$dataTable = Data {
+ConvertFrom-StringData @'
+    thisRev=2
+    savePath=C:\\Users\\ac00418\\Documents\\glengyle\\logs
+    SO_GRIDS=C:\\Users\\ac00418\\Documents\\glengyle\\data\\GRIDS_XLSX\\SOUTH\\LP MODEL RUNS
+    SE_GRIDS=C:\\Users\\ac00418\\Documents\\glengyle\\data\\GRIDS_XLSX\\SOUTH EAST\\LP MODEL RUNS
+'@}
 function Open-WOPGridExcel {
 
 	[CmdletBinding()]
@@ -9,9 +16,11 @@ function Open-WOPGridExcel {
         [Parameter(Mandatory = $false)]
         [System.String]$fileOut        
     )
+
+    #WOP-TeeObject "This is Revision: $($dataTable.thisRev)"
     
     # create excel s/s
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tCreate excel s/s" | Tee-Object $fileOut
+	WOP-TeeObject "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tCreate excel s/s" $fileOut
 	$xl = New-Object -ComObject Excel.Application
 	# hide
 	$xl.Visible = $false
@@ -19,7 +28,7 @@ function Open-WOPGridExcel {
 	$xl.DisplayAlerts = $false
     
     # open workbook
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tOpen workbook" | Tee-Object $fileOut
+	WOP-TeeObject "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tOpen workbook" $fileOut
 	$wb = $xl.Workbooks.Open($filepath)
 	$ws = $wb.Worksheets.Item(1)
 	$ws.Activate()
@@ -28,15 +37,15 @@ function Open-WOPGridExcel {
 	$lastRow = $ws.UsedRange.Rows.Count
 	$lastCol = $ws.UsedRange.Columns.Count
 	
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($lastRow) Rows" | Tee-Object $fileOut
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($lastCol) Columns" | Tee-Object $fileOut
+	WOP-TeeObject "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($lastRow) Rows" $fileOut
+	WOP-TeeObject "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($lastCol) Columns" $fileOut
     
     # ignore headers
 	$thisRow = 3
 
 	# number of DGs
 	$govcount = $lastRow - $thisRow
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($govcount) DGs in grid" | Tee-Object $fileOut
+	WOP-TeeObject "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`t$($govcount) DGs in grid" $fileOut
 
 	# counter
 	$dg_dataArr = @()
@@ -46,7 +55,7 @@ function Open-WOPGridExcel {
 
 		$dg_data = @{}
 		
-		"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tRow $($k)" | Tee-Object $fileOut
+		WOP-TeeObject "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tRow $($k)" $fileOut
 
 		$dg_data.add('WOP_EquipmentID',$ws.Cells.Item($k,1).value())
 		$dg_data.add('WOP_GridNumber',$ws.Cells.Item($k,2).value())
@@ -68,17 +77,23 @@ function Open-WOPGridExcel {
 		$dg_dataArr += $dg_dataObj
 		
 	}
-
-    $newXML = (Split-Path $filepath -Leaf).replace(".xlsx","") + ".xml"
-    $outFile = Join-Path -Path "S:\TEST AREA\ac00418\OpsPlan\data\SC_DG_OBJECTS" -ChildPath $newXML
     
-    $dg_dataArr | Export-Clixml $outFile -NoClobber
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tExported to xml [$($outFile)]" | Tee-Object $fileOut
+    <#
+    $dg_dataDG = $dg_dataArr | where { $_.WOP_TypeOfEquipment -match 'DG' }
+    $dg_dataRRI = $dg_dataArr | where {$_.WOP_TypeOfEquipment -match 'RRI' }
+    
+    $dg_dataCLEAN = [array]$dg_dataDG + $dg_dataRRI
+    #>
+    
+    #WOP-TeeObject "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tRemoved $($dg_dataArr.Count - $dg_dataCLEAN.Count) empty entries." $fileOut
 
-	"$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tStopping Excel" | Tee-Object $fileOut
+    $newXML = (Split-Path $filepath -Leaf).replace(".xlsx",".xml")
+    $outFile = Join-Path -Path "C:\Users\ac00418\Documents\glengyle\data\GRIDS_OBJ" -ChildPath $newXML
+    
+    $dg_dataArr | Export-Clixml $outFile
+	WOP-TeeObject "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tExported to xml [$($outFile)]" $fileOut
+	WOP-TeeObject "$(Get-Date -UFormat '%Y/%m/%d %H:%M:%S')`tClosing Excel" $fileOut
     $wb.Close()
     $xl.Quit()
-	#$aa = Get-Process -Name "excel"
-	#Stop-Process $aa
     
 }
