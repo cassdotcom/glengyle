@@ -41,6 +41,7 @@ function Expand-SSFText {
     $ssfVersion = $ssf.Version
     $ssfDateAndTime = $ssf.DateAndTime
     $ssfNameOfScript = $ssf.NameOfScript
+    $ssfFutureYear = $ssf.FutureYear
     $ssfRun = $ssf.Run
     $ssfOutputFile = $ssf.OutputFile
     $ssfLogFile = $ssf.LogFile
@@ -77,7 +78,7 @@ int main()
    
    // EXPORT FILES
    // Model node data
-   string sExportFile = "\\scotia.sgngroup.net\dfs\shared\Syn4.2.3\WOP 15-16\FY1 Runs - Outputs\$ssfOutputFile.csv"; 
+   string sExportFile = "\\scotia.sgngroup.net\dfs\shared\Syn4.2.3\WOP 15-16\$ssfFutureYear Runs - Outputs\$ssfOutputFile.csv"; 
    string sExportFile2 = "\\scotia.sgngroup.net\dfs\shared\Syn4.2.3\TEST AREA\ac00418\OpsPlan\output\$ssfOutputFile.csv";
    // Export settings
    string sExportSettings = "\\scotia.sgngroup.net\dfs\shared\Syn4.2.3\TEST AREA\ac00418\OpsPlan\config\WOP15_Ex.ini";
@@ -143,7 +144,7 @@ int main()
    
    // EXPORT FILES
    // Model node data
-   string sExportFile = "\\scotia.sgngroup.net\dfs\shared\Syn4.2.3\WOP 15-16\FY1 Runs - Outputs\$ssfOutputFile.csv"; 
+   string sExportFile = "\\scotia.sgngroup.net\dfs\shared\Syn4.2.3\WOP 15-16\$ssfFutureYear Runs - Outputs\$ssfOutputFile.csv"; 
    string sExportFile2 = "\\scotia.sgngroup.net\dfs\shared\Syn4.2.3\TEST AREA\ac00418\OpsPlan\output\$ssfOutputFile.csv";
    // Export settings
    string sExportSettings = "\\scotia.sgngroup.net\dfs\shared\Syn4.2.3\TEST AREA\ac00418\OpsPlan\config\WOP15_Ex.ini";
@@ -227,7 +228,8 @@ function Create-SSF {
         $ssf | Add-Member -MemberType NoteProperty -Name NameOfScript -Value $scriptTitle          
 
         $ssf | Add-Member -MemberType NoteProperty -Name FileName -Value ""                                                                                                                                      
-        $ssf | Add-Member -MemberType NoteProperty -Name FileID -Value ""                                                                       
+        $ssf | Add-Member -MemberType NoteProperty -Name FileID -Value "" 
+        $ssf | Add-Member -MemberType NoteProperty -Name FutureYear -Value ""                                                                      
         $ssf | Add-Member -MemberType NoteProperty -Name Run -Value ""    
         $ssf | Add-Member -MemberType NoteProperty -Name OutputFile -Value ""
 
@@ -257,7 +259,8 @@ function Create-SSF {
         # Run 1
         Write-Verbose "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")]`tRun 1"
         $ssf.FileName = "FY1-R1-SSF.ssf"                                                                                                                                      
-        $ssf.FileID ="WOP15F1R1SSF"                                                                       
+        $ssf.FileID = ("WOP15F1R1SSF" + $netNum )
+        $ssf.FutureYear = "FY1"                                                                      
         $ssf.Run = "R1"           
         $outFile = $NetNum + "_FY1_R1"                                                                                                                                            
         $ssf.OutputFile = $outFile
@@ -267,8 +270,9 @@ function Create-SSF {
 
         # Run 2        
         Write-Verbose "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")]`tRun 2"
-        $ssf.FileName = "FY1-R2-SSF.ssf"                                                                                                                                      
-        $ssf.FileID ="WOP15F1R2SSF"                                                                       
+        $ssf.FileName = "FY1-R2-SSF.ssf"  
+        $ssf.FutureYear = "FY1"                                                                                                                                    
+        $ssf.FileID = ("WOP15F1R2SSF" + $netNum)                                                                       
         $ssf.Run = "R2"    
         
         $outFile = $NetNum + "_FY1_R2"                                                                                                                                            
@@ -280,8 +284,9 @@ function Create-SSF {
 
         # Run 3        
         Write-Verbose "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")]`tRun 3"
-        $ssf.FileName = "FY5-R1-SSF.ssf"                                                                                                                                      
-        $ssf.FileID = "WOP15F5R1SSF"                                                                       
+        $ssf.FileName = "FY5-R1-SSF.ssf"    
+        $ssf.FutureYear = "FY5"                                                                                                                                                 
+        $ssf.FileID = ("WOP15F5R1SSF" + $netNum)
         $ssf.Run = "R1"    
         
         $outFile = $NetNum + "_FY5_R1"                                                                                                                                            
@@ -293,8 +298,9 @@ function Create-SSF {
 
         # Run 4        
         Write-Verbose "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")]`tRun 4"
-        $ssf.FileName = "FY5-R2-SSF.ssf"                                                                                                                                      
-        $ssf.FileID = "WOP15F5R2SSF"                                                                       
+        $ssf.FileName = "FY5-R2-SSF.ssf"      
+        $ssf.FutureYear = "FY5"                                                                                                                                               
+        $ssf.FileID = ("WOP15F5R2SSF" + $netNum)
         $ssf.Run = "R2"    
         
         $outFile = $NetNum + "_FY5_R2"                                                                                                                                            
@@ -306,8 +312,9 @@ function Create-SSF {
 
         # Run 5        
         Write-Verbose "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")]`tRun 5"
-        $ssf.FileName = "FY5-R3-SSF.ssf"                                                                                                                                      
-        $ssf.FileID = "WOP15F5R3SSF"                                                                       
+        $ssf.FileName = "FY5-R3-SSF.ssf"
+        $ssf.FutureYear = "FY5"                                                                                                                                                 
+        $ssf.FileID = ("WOP15F5R3SSF" + $netNum)
         $ssf.Run = "R3"    
         
         $outFile = $NetNum + "_FY5_R3"                                                                                                                                            
@@ -320,11 +327,9 @@ function Create-SSF {
 
          
     } End {
-
-        
-
-    }
-
+<#
+    .VERSION
+        1.2
+#> }   
 }
-
 
