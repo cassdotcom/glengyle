@@ -1,0 +1,45 @@
+<WOP100>
+  <Title>Query-DataBase</Title>
+  <Revision>1</Revision>
+  <Path>C:\Users\ac00418\Documents\glengyle\scripts\rev_iii\Query-Database.ps1</Path>
+  <Description>Creates query and pulls data from db</Description>
+  <RevisionDate>29/08/2015</RevisionDate>
+  <RevisionNotes>First release</RevisionNotes>
+  <FileID>98542dc1-1bb5-42e9-acbb-d2ae18f0a092</FileID>
+  <FileHash>907E6CC9B65822E78A700BAEAA7BA139B29EBBDC4A97A4E884898B8BDC62FBF354C6D8CD80699908AF1DD265277B0506EF9A77B9025DB1843578BE73CC5DE089</FileHash>
+  <FunctionOwner>ac00418</FunctionOwner>
+  <FunctionAuthor>A. CASSIDY</FunctionAuthor>
+  <Synopsis>Interrogates database with query</Synopsis>
+  <FileName>Query-DataBase.ps1</FileName>
+  <Comment>
+  </Comment>
+  <Inputs>
+    <param>
+		<name>database</name>
+		<value>database name</value>
+	</param>
+    <param>
+		<name>query</name>
+		<value>SQL query to database</value>
+	</param>
+  </Inputs>
+  <Outputs>
+    <param>
+		<name>dt</name>
+		<value>Datatable with query result</value>
+	</param>
+  </Outputs>
+  <Example>
+    <example>
+		<value>database_values = Query-Database -database $(database file) -query $(SQL query)</value>
+	</example> 
+  </Example>
+  <ScriptData>
+    <ConnectionStr>"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=`"$database`";"</ConnectionStr>
+    <Error>
+      <Adapter>"Failed query $($thisError)"</Adapter>
+      <ConnectionStr>"Could not create connection: $($thisError)"</ConnectionStr>
+    </Error>
+  </ScriptData>
+  <RevNotes>initial version</RevNotes>
+</WOP100>
