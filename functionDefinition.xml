@@ -1,76 +1,47 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
-	<configSections>
-		<section>
-			<name>Header</name>
-			<type>Function metadata</type>
-		</section>
-		<section>
-			<name>Revision</name>
-			<type>Version Control</type>
-		</section>
-		<section>
-			<name>Parameters</name>
-			<type>Inputs and outputs</type>
-		</section>
-		<section>
-			<name>Examples</name>
-			<type>Function call examples</type>
-		</section>
-		<section>
-			<name>ScriptFile</name>
-			<type>Script information</type>
-		</section>
-		<section>
-			<name>ScriptData</name>
-			<type>Variables and constants etc</type>
-		</section>		
-	</configSections>
+	<Sections name="Header" comment="Function metadata" />
+	<Sections name="Revision" comment="Version Control" />
+	<Sections name="Parameters" comment="Inputs and outputs" />
+	<Sections name="Examples" comment="Function call examples" />
+	<Sections name="ScriptFile" comment="Script information" />
+	<Sections name="ScriptData" comment="Variables and constants etc" />	
 	
 	<Header>
-		<setting name="WOPID" value="WOP100"/>
-		<setting name="Title" value="Query-DataBase" />
-		<setting name="Synopsis" value="Interrogates database with query" />
-		<setting name="Description" value="Creates query and pulls data from db" />
-		<setting name="FunctionAuthor" value="A. CASSIDY" />
-		<setting name="FunctionOwner" value="ac00418" />
-		<setting name="Comment" value="empty" />
+		<WOPID>WOP100</WOPID>
+		<Title>Query-DataBase</Title>
+		<Synopsis>Interrogates database with query</Synopsis>
+		<Description>Creates query and pulls data from db</Description>
+		<FunctionAuthor>A. CASSIDY</FunctionAuthor>
+		<FunctionOwner>ac00418</FunctionOwner>
+		<Comment>empty</Comment>
 	</Header>
 	
 	<Revision>
-		<setting name="Number" value="1" />
-		<setting name="Date" value="2015-08-29" />
-		<setting name="Notes" value="First release" />	
+		<Number>1</Number>
+		<Date>2015-08-29</Date>
+		<Notes>First release</Notes>
 	</Revision>
 	
 	<Parameters>
 		<Inputs>
-			<param>
-				<name>database</name>
-				<value>database name</value>
-			</param>
-			<param>
-				<name>query</name>
-				<value>SQL query to database</value>
-			</param>
+			<database>database name</database>
+			<query>SQL query to database</query>
 		</Inputs>
 		<Outputs>
-			<param>
-				<name>dt</name>
-				<value>Datatable with query result</value>
-			</param>
+			<dt>Datatable with query result</dt>
 		</Outputs>
 	</Parameters>
 	
 	<Examples>
-		<setting name="Example" value="database_values = Query-Database -database $(database file) -query $(SQL query)" />
+		<Example>database_values = Query-Database -database $(database file) -query $(SQL query)</Example>
 	</Examples>
 		
 	<ScriptFile>
-		<setting name="FileName" value="Query-DataBase.ps1" />
-		<setting name="Path" value="C:\Users\ac00418\Documents\glengyle\scripts\rev_iii\Query-Database.ps1" />
-		<setting name="FileID" value="98542dc1-1bb5-42e9-acbb-d2ae18f0a092" />
-		<setting name="FileHash" value="907E6CC9B65822E78A700BAEAA7BA139B29EBBDC4A97A4E884898B8BDC62FBF354C6D8CD80699908AF1DD265277B0506EF9A77B9025DB1843578BE73CC5DE089" />
+		<FileName>Query-DataBase.ps1</FileName>
+		<Path>C:\Users\ac00418\Documents\glengyle\scripts\rev_iii\Query-Database.ps1</Path>
+		<FileID>98542dc1-1bb5-42e9-acbb-d2ae18f0a092</FileID>
+		<FileHash>907E6CC9B65822E78A700BAEAA7BA139B29EBBDC4A97A4E884898B8BDC62FBF354C6D8CD80699908AF1DD265277B0506EF9A77B9025DB1843578BE73CC5DE089</FileHash>
 	</ScriptFile>
 	
 	<ScriptData>
