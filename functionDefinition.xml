@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
-	<Sections name="Header" comment="Function metadata" />
-	<Sections name="Revision" comment="Version Control" />
-	<Sections name="Parameters" comment="Inputs and outputs" />
-	<Sections name="Examples" comment="Function call examples" />
-	<Sections name="ScriptFile" comment="Script information" />
-	<Sections name="ScriptData" comment="Variables and constants etc" />	
+
+	<configSections>
+		<section name="ConfigFile" comment="XML file metadata" />
+		<section name="Header" comment="Function metadata" />
+		<section name="Revision" comment="Version Control" />
+		<section name="Parameters" comment="Inputs and outputs" />
+		<section name="Examples" comment="Function call examples" />
+		<section name="ScriptFile" comment="Script information" />
+		<section name="ScriptData" comment="Variables and constants etc" />
+	</configSections>
+	
+	<!--Configuration File Details-->
+	<ConfigFile>
+		<configRev>0.0.9</configRev>
+		<configDate>2015-10-13</configDate>
+	</ConfigFile>
 	
 	<Header>
 		<WOPID>WOP100</WOPID>
